@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoStreak – Profile</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        .page-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px 90px;
+        }
+
+        /* Avatar hero */
+        .profile-hero {
+            background: linear-gradient(135deg, #0b3d0b, #1b5e20);
+            border-radius: 28px;
+            padding: 28px 40px;
+            text-align: center;
+            width: 100%;
+            max-width: 340px;
+            color: white;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            margin-bottom: 20px;
+        }
+
+        .profile-avatar {
+            font-size: 72px;
+            margin-bottom: 6px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .profile-name {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 2px;
+        }
+
+        .profile-email {
+            font-size: 13px;
+            opacity: 0.75;
+        }
+
+        .profile-level {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 4px 14px;
+            margin-top: 10px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            width: 100%;
+            max-width: 340px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 20px;
+            padding: 18px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .stat-icon {
+            font-size: 30px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 900;
+            color: #0b3d0b;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        /* XP bar */
+        .xp-card {
+            background: white;
+            border-radius: 20px;
+            padding: 18px 20px;
+            width: 100%;
+            max-width: 340px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .xp-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #0b3d0b;
+        }
+
+        .xp-bar-bg {
+            background: #e8f5e9;
+            border-radius: 10px;
+            height: 12px;
+            overflow: hidden;
+        }
+
+        .xp-bar-fill {
+            background: linear-gradient(90deg, #2e7d32, #66bb6a);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.8s ease;
+        }
+
+        /* Badges */
+        .badges-card {
+            background: white;
+            border-radius: 20px;
+            padding: 18px 20px;
+            width: 100%;
+            max-width: 340px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .badges-title {
+            font-weight: 700;
+            color: #0b3d0b;
+            margin-bottom: 14px;
+            font-size: 15px;
+        }
+
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            text-align: center;
+        }
+
+        .badge-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-icon {
+            font-size: 28px;
+            filter: grayscale(0%);
+        }
+
+        .badge-icon.locked {
+            filter: grayscale(100%);
+            opacity: 0.4;
+        }
+
+        .badge-name {
+            font-size: 10px;
+            color: #555;
+        }
+
+        /* Logout */
+        .logout-btn {
+            width: 100%;
+            max-width: 340px;
+            padding: 14px;
+            border: none;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #c62828, #e53935);
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(198, 40, 40, 0.3);
+            transition: transform 0.15s;
+        }
+
+        .logout-btn:hover {
+            transform: scale(0.98);
+        }
+
+        /* Bottom nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 20px;
+            text-decoration: none;
+            color: #888;
+            gap: 2px;
+        }
+
+        .nav-item span {
+            font-size: 11px;
+        }
+
+        .nav-item.active {
+            color: #0b3d0b;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-content">
+
+        <div class="profile-hero">
+            <div class="profile-avatar">🌿</div>
+            <div class="profile-name" id="profileName">Loading…</div>
+            <div class="profile-email" id="profileEmail"></div>
+            <div class="profile-level" id="profileLevel">🌱 Eco Seedling</div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">🔥</div>
+                <div class="stat-value" id="pStreak">–</div>
+                <div class="stat-label">Day Streak</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-value" id="pXP">–</div>
+                <div class="stat-label">Total XP</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value" id="pTasks">–</div>
+                <div class="stat-label">Tasks Done</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🏆</div>
+                <div class="stat-value" id="pRank">–</div>
+                <div class="stat-label">Global Rank</div>
+            </div>
+        </div>
+
+        <div class="xp-card">
+            <div class="xp-header">
+                <span>XP Progress</span>
+                <span id="xpProgress">0 / 500 XP to next level</span>
+            </div>
+            <div class="xp-bar-bg">
+                <div class="xp-bar-fill" id="xpBarFill" style="width:0%"></div>
+            </div>
+        </div>
+
+        <div class="badges-card">
+            <div class="badges-title">🎖️ Eco Badges</div>
+            <div class="badges-grid" id="badgesGrid">
+                <!-- populated by JS -->
+            </div>
+        </div>
+
+        <button class="logout-btn" onclick="logout()">🚪 Log Out</button>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">🏠<span>Home</span></a>
+        <a href="streak.html" class="nav-item">🔥<span>Streak</span></a>
+        <a href="leaderboard.html" class="nav-item">🏆<span>Leaderboard</span></a>
+        <a href="profile.html" class="nav-item active">👤<span>Profile</span></a>
+    </div>
+
+    <script>
+        const allBadges = [
+            { icon: '🌱', name: 'First Step', minXP: 0 },
+            { icon: '🌿', name: 'Going Green', minXP: 100 },
+            { icon: '🔥', name: '7-Day Flame', minXP: 200 },
+            { icon: '🌍', name: 'Earth Hero', minXP: 400 },
+            { icon: '♻️', name: 'Recycler', minXP: 600 },
+            { icon: '🌳', name: 'Tree Hugger', minXP: 800 },
+            { icon: '🏆', name: 'Eco Champ', minXP: 1200 },
+            { icon: '🌟', name: 'Legend', minXP: 2000 }
+        ];
+
+        const levels = [
+            { name: '🌱 Eco Seedling', minXP: 0, maxXP: 500 },
+            { name: '🌿 Green Grower', minXP: 500, maxXP: 1200 },
+            { name: '🌳 Eco Warrior', minXP: 1200, maxXP: 2500 },
+            { name: '🌍 Earth Hero', minXP: 2500, maxXP: 5000 },
+            { name: '🏆 Eco Legend', minXP: 5000, maxXP: 9999 }
+        ];
+
+        async function loadProfile() {
+            let user = { name: 'EcoUser', streak: 0, xp: 0 };
+            try {
+                const res = await fetch('/api/user');
+                if (res.ok) user = await res.json();
+            } catch (e) { }
+
+            document.getElementById('profileName').innerText = user.name ?? 'EcoUser';
+            document.getElementById('profileEmail').innerText = user.email ?? '';
+            document.getElementById('pStreak').innerText = user.streak ?? 0;
+            document.getElementById('pXP').innerText = user.xp ?? 0;
+            document.getElementById('pTasks').innerText = user.tasksCompleted ?? '–';
+            document.getElementById('pRank').innerText = user.rank ?? '#–';
+
+            // Level
+            const xp = user.xp ?? 0;
+            const lvl = levels.findLast(l => xp >= l.minXP) ?? levels[0];
+            document.getElementById('profileLevel').innerText = lvl.name;
+            const pct = Math.min(100, ((xp - lvl.minXP) / (lvl.maxXP - lvl.minXP)) * 100);
+            document.getElementById('xpBarFill').style.width = pct + '%';
+            document.getElementById('xpProgress').innerText =
+                `${xp - lvl.minXP} / ${lvl.maxXP - lvl.minXP} XP to next level`;
+
+            // Badges
+            const grid = document.getElementById('badgesGrid');
+            allBadges.forEach(b => {
+                const unlocked = xp >= b.minXP;
+                grid.innerHTML += `
+        <div class="badge-item">
+            <div class="badge-icon ${unlocked ? '' : 'locked'}">${b.icon}</div>
+            <div class="badge-name">${b.name}</div>
+        </div>`;
+            });
+        }
+
+        function logout() {
+            if (confirm('Log out of EcoStreak?')) {
+                fetch('/api/logout', { method: 'POST' })
+                    .finally(() => { window.location.href = '/'; });
+            }
+        }
+
+        loadProfile();
+    </script>
+</body>
+
+</html>

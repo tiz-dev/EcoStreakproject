@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoStreak Home</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .dashboard-box {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 20px;
+            border-radius: 20px;
+            width: 320px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .header {
+            font-size: 22px;
+            font-weight: bold;
+            color: #0b3d0b;
+            margin-bottom: 10px;
+        }
+
+        .task-card {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 10px;
+        }
+
+        .complete-btn {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 10px;
+            background: #0b3d0b;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .streak {
+            margin-top: 15px;
+            font-size: 18px;
+            color: #0b3d0b;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 20px;
+            text-decoration: none;
+            color: #888;
+            gap: 2px;
+        }
+
+        .nav-item span {
+            font-size: 11px;
+        }
+
+        .nav-item.active {
+            color: #0b3d0b;
+            font-weight: bold;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="dashboard-box">
+
+            <div class="header">
+                🌱 EcoStreak
+            </div>
+
+            <div id="username"></div>
+
+            <div class="task-card">
+
+                <b>Today's Eco Task</b>
+
+                <p id="taskText">Loading task...</p>
+
+                <button class="complete-btn" id="completeBtn" onclick="completeTask()">
+                    Mark as Complete
+                </button>
+
+                <p>Keep your streak going!</p>
+
+            </div>
+
+            <div class="streak" id="streak"></div>
+
+        </div>
+
+    </div>
+
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item active">🏠<span>Home</span></a>
+        <a href="streak.html" class="nav-item">🔥<span>Streak</span></a>
+        <a href="leaderboard.html" class="nav-item">🏆<span>Leaderboard</span></a>
+        <a href="profile.html" class="nav-item">👤<span>Profile</span></a>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        async function loadData() {
+            const userRes = await fetch("/api/user");
+            const user = await userRes.json();
+
+            const taskRes = await fetch("/api/task");
+            const task = await taskRes.json();
+
+            document.getElementById("username").innerText =
+                "Hello, " + user.name + " 👋";
+
+            document.getElementById("streak").innerText =
+                "🔥 " + user.streak + " Day Streak | XP " + user.xp;
+
+            // Dynamically show today's task text from the API
+            document.getElementById("taskText").innerText = task.task;
+
+            const button = document.getElementById("completeBtn");
+
+            if (task.completed) {
+                button.innerText = "Streak Completed ✅";
+                button.disabled = true;
+            } else {
+                button.innerText = "Mark as Complete";
+                button.disabled = false;
+            }
+        }
+
+        loadData();
+    </script>
+</body>
+
+</html>
