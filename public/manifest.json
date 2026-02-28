@@ -1,9 +1,25 @@
 {
   "name": "EcoStreak",
   "short_name": "Eco",
-  "start_url": "/",
+  "description": "Track your daily eco-friendly habits and build your green streak!",
+  "start_url": "/EcoStreakproject/index.html",
+  "scope": "/EcoStreakproject/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#0b3d0b",
   "theme_color": "#0b3d0b",
-  "icons": []
+  "icons": [
+    {
+      "src": "images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }
