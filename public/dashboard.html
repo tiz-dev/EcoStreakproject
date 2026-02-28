@@ -44,6 +44,11 @@
             cursor: pointer;
         }
 
+        .complete-btn:disabled {
+            background: #888;
+            cursor: not-allowed;
+        }
+
         .streak {
             margin-top: 15px;
             font-size: 18px;
@@ -121,14 +126,61 @@
         <a href="leaderboard.html" class="nav-item">🏆<span>Leaderboard</span></a>
         <a href="profile.html" class="nav-item">👤<span>Profile</span></a>
     </div>
-    <script src="script.js"></script>
-    <script>
-        async function loadData() {
-            const userRes = await fetch("https://tiz-dev.github.io/EcoStreakproject/user");
-            const user = await userRes.json();
 
-            const taskRes = await fetch("https://tiz-dev.github.io/EcoStreakproject/task");
-            const task = await taskRes.json();
+    <script>
+        // Redirect to login if not logged in
+        if (!localStorage.getItem("loggedIn")) {
+            window.location.href = "index.html";
+        }
+
+        // Load user data from localStorage, or use defaults
+        function getUser() {
+            return JSON.parse(localStorage.getItem("user")) || {
+                name: "Haniya",
+                streak: 5,
+                xp: 120
+            };
+        }
+
+        // Load today's task — resets daily based on date
+        function getTask() {
+            const today = new Date().toDateString();
+            const saved = JSON.parse(localStorage.getItem("todayTask"));
+
+            // If no task saved, or it's from a previous day, reset it
+            if (!saved || saved.date !== today) {
+                const freshTask = {
+                    task: "Carry your reusable water bottle",
+                    completed: false,
+                    date: today
+                };
+                localStorage.setItem("todayTask", JSON.stringify(freshTask));
+                return freshTask;
+            }
+            return saved;
+        }
+
+        function completeTask() {
+            const task = getTask();
+            if (task.completed) return;
+
+            // Mark task complete
+            task.completed = true;
+            localStorage.setItem("todayTask", JSON.stringify(task));
+
+            // Update user XP and streak
+            const user = getUser();
+            user.streak += 1;
+            user.xp += 20;
+            localStorage.setItem("user", JSON.stringify(user));
+
+            // Refresh the UI
+            loadData();
+        }
+
+        function loadData() {
+            const user = getUser();
+            const task = getTask();
 
             document.getElementById("username").innerText =
                 "Hello, " + user.name + " 👋";
@@ -136,11 +188,9 @@
             document.getElementById("streak").innerText =
                 "🔥 " + user.streak + " Day Streak | XP " + user.xp;
 
-            // Dynamically show today's task text from the API
             document.getElementById("taskText").innerText = task.task;
 
             const button = document.getElementById("completeBtn");
-
             if (task.completed) {
                 button.innerText = "Streak Completed ✅";
                 button.disabled = true;
