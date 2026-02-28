@@ -196,14 +196,10 @@
         <div class="page-subtitle">Top eco-warriors this week</div>
 
         <!-- Podium (top 3) -->
-        <div class="podium" id="podium">
-            <!-- populated by JS -->
-        </div>
+        <div class="podium" id="podium"></div>
 
         <!-- Full ranked list (4th onwards) -->
-        <div class="leaderboard-list" id="lbList">
-            <!-- populated by JS -->
-        </div>
+        <div class="leaderboard-list" id="lbList"></div>
     </div>
 
     <div class="bottom-nav">
@@ -214,53 +210,55 @@
     </div>
 
     <script>
-        const avatars = ['🌿', '🌍', '🌱', '🌊', '♻️', '🌳', '🌻', '🌺', '🦋', '🐝'];
-        const fallbackUsers = [
-            { name: 'Aria S.', xp: 980, streak: 21 },
-            { name: 'Ravi K.', xp: 870, streak: 18 },
-            { name: 'Priya M.', xp: 760, streak: 15 },
-            { name: 'Zoe L.', xp: 640, streak: 12 },
-            { name: 'Arjun R.', xp: 510, streak: 10 },
-            { name: 'Mei C.', xp: 430, streak: 8 },
-            { name: 'Dev P.', xp: 310, streak: 6 }
-        ];
-
-        async function loadLeaderboard() {
-            let users = fallbackUsers;
-            try {
-                const res = await fetch('/api/leaderboard');
-                if (res.ok) users = await res.json();
-            } catch (e) { }
-
-            // Inject current user at a random slot if not present
-            try {
-                const userRes = await fetch('/api/user');
-                const me = await userRes.json();
-                if (me && me.name) {
-                    // mark the first user as "me" for highlight purposes
-                    users = users.map((u, i) => ({ ...u, isMe: i === 3 }));
-                }
-            } catch (e) { }
-
-            buildPodium(users.slice(0, 3));
-            buildList(users.slice(3), 4);
+        // Redirect to login if not logged in
+        if (!localStorage.getItem("loggedIn")) {
+            window.location.href = "index.html";
         }
 
+        const avatars = ['🌿', '🌍', '🌱', '🌊', '♻️', '🌳', '🌻', '🌺', '🦋', '🐝'];
+
+        // Get current user from localStorage
+        const me = JSON.parse(localStorage.getItem("user")) || {
+            name: "Haniya", xp: 120, streak: 5
+        };
+
+        // Static mock users — current user is injected and sorted in
+        const mockUsers = [
+            { name: 'Aria S.',  xp: 980, streak: 21 },
+            { name: 'Ravi K.',  xp: 870, streak: 18 },
+            { name: 'Priya M.', xp: 760, streak: 15 },
+            { name: 'Zoe L.',   xp: 640, streak: 12 },
+            { name: 'Arjun R.', xp: 510, streak: 10 },
+            { name: 'Mei C.',   xp: 430, streak: 8  },
+            { name: 'Dev P.',   xp: 310, streak: 6  }
+        ];
+
+        // Remove any existing entry with the same name to avoid duplicates,
+        // then inject the real user from localStorage
+        const filtered = mockUsers.filter(u => u.name !== me.name);
+        filtered.push({ name: me.name, xp: me.xp, streak: me.streak, isMe: true });
+
+        // Sort by XP descending
+        filtered.sort((a, b) => b.xp - a.xp);
+
+        buildPodium(filtered.slice(0, 3));
+        buildList(filtered.slice(3), 4);
+
         function buildPodium(top3) {
-            const order = [1, 0, 2]; // display order: 2nd, 1st, 3rd
+            const order = [1, 0, 2]; // display: 2nd, 1st, 3rd
             const classes = ['p2', 'p1', 'p3'];
             const medals = ['🥈', '🥇', '🥉'];
             const podium = document.getElementById('podium');
             podium.innerHTML = '';
             order.forEach((idx, pos) => {
-                const u = top3[idx] || { name: '–', xp: 0 };
+                const u = top3[idx] || { name: '–', xp: 0, streak: 0 };
                 podium.innerHTML += `
-        <div class="podium-place ${classes[pos]}">
-            <div class="podium-avatar">${avatars[idx % avatars.length]}</div>
-            <div class="podium-name">${u.name}</div>
-            <div class="podium-xp">${u.xp} XP</div>
-            <div class="podium-block">${medals[pos]}</div>
-        </div>`;
+                    <div class="podium-place ${classes[pos]}">
+                        <div class="podium-avatar">${avatars[idx % avatars.length]}</div>
+                        <div class="podium-name">${u.name}${u.isMe ? ' 👤' : ''}</div>
+                        <div class="podium-xp">${u.xp} XP</div>
+                        <div class="podium-block">${medals[pos]}</div>
+                    </div>`;
             });
         }
 
@@ -269,19 +267,17 @@
             list.innerHTML = '';
             rest.forEach((u, i) => {
                 list.innerHTML += `
-        <div class="lb-row ${u.isMe ? 'me' : ''}">
-            <div class="lb-rank">${startRank + i}</div>
-            <div class="lb-avatar">${avatars[(startRank + i) % avatars.length]}</div>
-            <div class="lb-info">
-                <div class="lb-name">${u.name}${u.isMe ? ' (You)' : ''}</div>
-                <div class="lb-sub">🔥 ${u.streak ?? 0} day streak</div>
-            </div>
-            <div class="lb-xp">${u.xp} XP</div>
-        </div>`;
+                    <div class="lb-row ${u.isMe ? 'me' : ''}">
+                        <div class="lb-rank">${startRank + i}</div>
+                        <div class="lb-avatar">${avatars[(startRank + i) % avatars.length]}</div>
+                        <div class="lb-info">
+                            <div class="lb-name">${u.name}${u.isMe ? ' (You)' : ''}</div>
+                            <div class="lb-sub">🔥 ${u.streak ?? 0} day streak</div>
+                        </div>
+                        <div class="lb-xp">${u.xp} XP</div>
+                    </div>`;
             });
         }
-
-        loadLeaderboard();
     </script>
 </body>
 

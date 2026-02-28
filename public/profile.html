@@ -21,7 +21,6 @@
             padding: 40px 20px 90px;
         }
 
-        /* Avatar hero */
         .profile-hero {
             background: linear-gradient(135deg, #0b3d0b, #1b5e20);
             border-radius: 28px;
@@ -41,15 +40,8 @@
         }
 
         @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-8px);
-            }
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
         }
 
         .profile-name {
@@ -73,7 +65,6 @@
             font-weight: 600;
         }
 
-        /* Stats */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -91,9 +82,7 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
-        .stat-icon {
-            font-size: 30px;
-        }
+        .stat-icon { font-size: 30px; }
 
         .stat-value {
             font-size: 24px;
@@ -107,7 +96,6 @@
             margin-top: 2px;
         }
 
-        /* XP bar */
         .xp-card {
             background: white;
             border-radius: 20px;
@@ -141,7 +129,6 @@
             transition: width 0.8s ease;
         }
 
-        /* Badges */
         .badges-card {
             background: white;
             border-radius: 20px;
@@ -173,10 +160,7 @@
             gap: 4px;
         }
 
-        .badge-icon {
-            font-size: 28px;
-            filter: grayscale(0%);
-        }
+        .badge-icon { font-size: 28px; }
 
         .badge-icon.locked {
             filter: grayscale(100%);
@@ -188,7 +172,6 @@
             color: #555;
         }
 
-        /* Logout */
         .logout-btn {
             width: 100%;
             max-width: 340px;
@@ -204,11 +187,8 @@
             transition: transform 0.15s;
         }
 
-        .logout-btn:hover {
-            transform: scale(0.98);
-        }
+        .logout-btn:hover { transform: scale(0.98); }
 
-        /* Bottom nav */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -230,9 +210,7 @@
             gap: 2px;
         }
 
-        .nav-item span {
-            font-size: 11px;
-        }
+        .nav-item span { font-size: 11px; }
 
         .nav-item.active {
             color: #0b3d0b;
@@ -286,9 +264,7 @@
 
         <div class="badges-card">
             <div class="badges-title">🎖️ Eco Badges</div>
-            <div class="badges-grid" id="badgesGrid">
-                <!-- populated by JS -->
-            </div>
+            <div class="badges-grid" id="badgesGrid"></div>
         </div>
 
         <button class="logout-btn" onclick="logout()">🚪 Log Out</button>
@@ -302,43 +278,58 @@
     </div>
 
     <script>
+        // Redirect to login if not logged in
+        if (!localStorage.getItem("loggedIn")) {
+            window.location.href = "index.html";
+        }
+
         const allBadges = [
-            { icon: '🌱', name: 'First Step', minXP: 0 },
-            { icon: '🌿', name: 'Going Green', minXP: 100 },
-            { icon: '🔥', name: '7-Day Flame', minXP: 200 },
-            { icon: '🌍', name: 'Earth Hero', minXP: 400 },
-            { icon: '♻️', name: 'Recycler', minXP: 600 },
-            { icon: '🌳', name: 'Tree Hugger', minXP: 800 },
-            { icon: '🏆', name: 'Eco Champ', minXP: 1200 },
-            { icon: '🌟', name: 'Legend', minXP: 2000 }
+            { icon: '🌱', name: 'First Step',  minXP: 0    },
+            { icon: '🌿', name: 'Going Green', minXP: 100  },
+            { icon: '🔥', name: '7-Day Flame', minXP: 200  },
+            { icon: '🌍', name: 'Earth Hero',  minXP: 400  },
+            { icon: '♻️', name: 'Recycler',    minXP: 600  },
+            { icon: '🌳', name: 'Tree Hugger', minXP: 800  },
+            { icon: '🏆', name: 'Eco Champ',   minXP: 1200 },
+            { icon: '🌟', name: 'Legend',      minXP: 2000 }
         ];
 
         const levels = [
-            { name: '🌱 Eco Seedling', minXP: 0, maxXP: 500 },
-            { name: '🌿 Green Grower', minXP: 500, maxXP: 1200 },
-            { name: '🌳 Eco Warrior', minXP: 1200, maxXP: 2500 },
-            { name: '🌍 Earth Hero', minXP: 2500, maxXP: 5000 },
-            { name: '🏆 Eco Legend', minXP: 5000, maxXP: 9999 }
+            { name: '🌱 Eco Seedling', minXP: 0,    maxXP: 500  },
+            { name: '🌿 Green Grower', minXP: 500,  maxXP: 1200 },
+            { name: '🌳 Eco Warrior',  minXP: 1200, maxXP: 2500 },
+            { name: '🌍 Earth Hero',   minXP: 2500, maxXP: 5000 },
+            { name: '🏆 Eco Legend',   minXP: 5000, maxXP: 9999 }
         ];
 
-        async function loadProfile() {
-            let user = { name: 'EcoUser', streak: 0, xp: 0 };
-            try {
-                const res = await fetch('/api/user');
-                if (res.ok) user = await res.json();
-            } catch (e) { }
+        // Calculate rank based on XP vs mock leaderboard
+        function calcRank(xp) {
+            const mockXPs = [980, 870, 760, 640, 510, 430, 310];
+            const rank = mockXPs.filter(x => x > xp).length + 1;
+            return '#' + rank;
+        }
 
-            document.getElementById('profileName').innerText = user.name ?? 'EcoUser';
-            document.getElementById('profileEmail').innerText = user.email ?? '';
+        function loadProfile() {
+            // Read user from localStorage with defaults
+            const user = JSON.parse(localStorage.getItem("user")) || {
+                name: "Haniya", streak: 5, xp: 120
+            };
+
+            // Tasks completed = streak value (each streak day = 1 completed task)
+            const tasksCompleted = user.streak ?? 0;
+
+            document.getElementById('profileName').innerText = user.name;
+            document.getElementById('profileEmail').innerText = user.email ?? 'haniya@eco.com';
             document.getElementById('pStreak').innerText = user.streak ?? 0;
             document.getElementById('pXP').innerText = user.xp ?? 0;
-            document.getElementById('pTasks').innerText = user.tasksCompleted ?? '–';
-            document.getElementById('pRank').innerText = user.rank ?? '#–';
+            document.getElementById('pTasks').innerText = tasksCompleted;
+            document.getElementById('pRank').innerText = calcRank(user.xp ?? 0);
 
-            // Level
+            // Level calculation
             const xp = user.xp ?? 0;
-            const lvl = levels.findLast(l => xp >= l.minXP) ?? levels[0];
+            const lvl = [...levels].reverse().find(l => xp >= l.minXP) ?? levels[0];
             document.getElementById('profileLevel').innerText = lvl.name;
+
             const pct = Math.min(100, ((xp - lvl.minXP) / (lvl.maxXP - lvl.minXP)) * 100);
             document.getElementById('xpBarFill').style.width = pct + '%';
             document.getElementById('xpProgress').innerText =
@@ -349,17 +340,18 @@
             allBadges.forEach(b => {
                 const unlocked = xp >= b.minXP;
                 grid.innerHTML += `
-        <div class="badge-item">
-            <div class="badge-icon ${unlocked ? '' : 'locked'}">${b.icon}</div>
-            <div class="badge-name">${b.name}</div>
-        </div>`;
+                    <div class="badge-item">
+                        <div class="badge-icon ${unlocked ? '' : 'locked'}">${b.icon}</div>
+                        <div class="badge-name">${b.name}</div>
+                    </div>`;
             });
         }
 
         function logout() {
             if (confirm('Log out of EcoStreak?')) {
-                fetch('/api/logout', { method: 'POST' })
-                    .finally(() => { window.location.href = '/'; });
+                // Clear login state and redirect
+                localStorage.removeItem("loggedIn");
+                window.location.href = "index.html";
             }
         }
 
