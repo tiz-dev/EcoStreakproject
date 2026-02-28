@@ -19,7 +19,7 @@ let todayTask = {
 };
 
 // Login endpoint
-app.post("/api/login", (req, res) => {
+app.post("https://tiz-dev.github.io/EcoStreakproject/login", (req, res) => {
     const { email, password } = req.body;
 
     // Demo credentials — replace with real DB auth later
@@ -31,17 +31,17 @@ app.post("/api/login", (req, res) => {
 });
 
 // Get user data
-app.get("/api/user", (req, res) => {
+app.get("https://tiz-dev.github.io/EcoStreakproject/user", (req, res) => {
     res.json(user);
 });
 
 // Get today's task
-app.get("/api/task", (req, res) => {
+app.get("https://tiz-dev.github.io/EcoStreakproject/task", (req, res) => {
     res.json(todayTask);
 });
 
 // Mark task complete
-app.post("/api/complete", (req, res) => {
+app.post("https://tiz-dev.github.io/EcoStreakproject/complete", (req, res) => {
     if (!todayTask.completed) {
         todayTask.completed = true;
         user.streak += 1;
@@ -56,7 +56,7 @@ app.post("/api/complete", (req, res) => {
 });
 
 // Leaderboard — returns a sorted list including the current user
-app.get("/api/leaderboard", (req, res) => {
+app.get("https://tiz-dev.github.io/EcoStreakproject/leaderboard", (req, res) => {
     const mockUsers = [
         { name: "Aria S.", xp: 980, streak: 21 },
         { name: "Ravi K.", xp: 870, streak: 18 },
@@ -76,7 +76,7 @@ app.get("/api/leaderboard", (req, res) => {
 });
 
 // Logout
-app.post("/api/logout", (req, res) => {
+app.post("https://tiz-dev.github.io/EcoStreakproject/logout", (req, res) => {
     res.json({ success: true });
 });
 
