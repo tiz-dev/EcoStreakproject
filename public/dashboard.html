@@ -124,10 +124,10 @@
     <script src="script.js"></script>
     <script>
         async function loadData() {
-            const userRes = await fetch("/api/user");
+            const userRes = await fetch("https://tiz-dev.github.io/EcoStreakproject/user");
             const user = await userRes.json();
 
-            const taskRes = await fetch("/api/task");
+            const taskRes = await fetch("https://tiz-dev.github.io/EcoStreakproject/task");
             const task = await taskRes.json();
 
             document.getElementById("username").innerText =
